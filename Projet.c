@@ -18,7 +18,7 @@ int waiting_y_x = 0;
 
 void sleep_random()
 {
-    usleep((rand() % 500 + 1000) * 1000); // 1 to 1.5 seconds
+    usleep((rand() % 500 + 1000) * 1000);
 }
 
 void enter_tunnel(int from_x, int bus_id, int trajet)
@@ -93,11 +93,10 @@ void *bus_thread(void *arg)
 
     for (int i = 1; i <= NB_TRAJETS; i++)
     {
-        // Aller
+
         enter_tunnel(from_x, bus_id, i);
         exit_tunnel(from_x);
 
-        // Retour
         enter_tunnel(!from_x, bus_id, i);
         exit_tunnel(!from_x);
     }
@@ -114,7 +113,6 @@ int main()
     sem_init(&tunnel_x_y, 0, 0);
     sem_init(&tunnel_y_x, 0, 0);
 
-    // Create bus threads
     for (int i = 0; i < NB_BUS_X + NB_BUS_Y; i++)
     {
         int *id = malloc(sizeof(int));
@@ -122,7 +120,6 @@ int main()
         pthread_create(&threads[i], NULL, bus_thread, id);
     }
 
-    // Wait for all buses to finish
     for (int i = 0; i < NB_BUS_X + NB_BUS_Y; i++)
     {
         pthread_join(threads[i], NULL);
