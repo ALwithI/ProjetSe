@@ -28,7 +28,7 @@ void enter_tunnel(int from_x, int bus_id, int trajet)
     if (from_x)
     {
         waiting_x_y++;
-        while (direction == 2 || (direction == 0 && waiting_y_x > 0))
+        if (direction == 2 || (direction == 0 && waiting_y_x > 0))
         {
             pthread_mutex_unlock(&mutex);
             sem_wait(&tunnel_x_y);
@@ -40,7 +40,7 @@ void enter_tunnel(int from_x, int bus_id, int trajet)
     else
     {
         waiting_y_x++;
-        while (direction == 1 || (direction == 0 && waiting_x_y > 0))
+        if (direction == 1 || (direction == 0 && waiting_x_y > 0))
         {
             pthread_mutex_unlock(&mutex);
             sem_wait(&tunnel_y_x);
@@ -54,8 +54,8 @@ void enter_tunnel(int from_x, int bus_id, int trajet)
     pthread_mutex_unlock(&mutex);
 
     printf("Bus %d de %s : %s -> %s (Trajet %d)\n", bus_id,
-           (bus_id < NB_BUS_X) ? "X" : "Y",
-           from_x ? "X" : "Y", from_x ? "Y" : "X", trajet);
+           (bus_id < NB_BUS_X) ? "X" : "Y", from_x ? "X" : "Y",
+           from_x ? "Y" : "X", trajet);
 
     sleep_random();
 }
